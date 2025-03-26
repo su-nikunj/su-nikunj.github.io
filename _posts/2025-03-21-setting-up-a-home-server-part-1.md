@@ -55,8 +55,5 @@ Now before choosing a Linux distribution, I should mention that you also have th
 
 So for Linux distributions, should I go with the popular Ubuntu, or one of the RedHat clones such as AlmaLinux and RockyLinux. While these are great for businesses, what I need is a simple Linux Distribution without much pre-installed stuff such as good ol' Debian Linux.
 
-### Optional installation
-#### Incus
-Since we did not install Proxmox, what if we want an easy to use WebGUI for creating and maintaining VMs and LXCs? Introducing Incus. It is an community driven alternative to Canonical's LXD, an all-in-one solution for creating and maintaining Virtual Machines and LXCs. This gives us a nice WebUI similar to Proxmox without the extra features we might not use.
-
-We'll be using the incus builds provided by [Zabbly](https://github.com/zabbly/incus) as they provide builds for Debian 12 as well as a WebUI, which is a fork of Canonical's LXD WebUI. The installation instructions are pretty straight forward to set it up and viola, you now have a Proxmox feature on plain debian.
+### Next steps
+In the next post, I'll be setting up my Debian installation and installing some useful applications.
