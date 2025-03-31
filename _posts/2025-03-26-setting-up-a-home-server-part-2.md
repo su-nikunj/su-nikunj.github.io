@@ -32,7 +32,36 @@ iface enp4s0 inet static
         gateway 192.168.1.1
 ```
 
-This turns off the Wifi and sets a static address to the ethernet connection. Now reboot the machine.
+This disconnects the Wifi and sets a static address to the ethernet connection.
+
+Also we need to make the following changes to `/etc/resolve.conf`.
+
+```text
+nameserver 192.168.1.1
+```
+
+This sets the DNS server to whatever I set on my router.
+
+Now reboot the machine.
+
+### Docker
+To setup all my services that will run on my home server, I'll be using [Docker](https://docs.docker.com/engine/). However, instead of installing it manually, I'll be making use of [CasaOS](https://casaos.zimaspace.com/). There are a number of benefits of maintaining Docker containers through CasaOS, such as:
+
+* One click installation of apps. No need to fiddle around with Portainer or Docker compose files.
+* Ability to format our SSD for storage and setup a Samba share with the click of a button.
+* A nice dashboard to access all our apps so no need to install a separate dashboard.
+
+However, in a production environment, you should definitely use Docker compose files as they provide reproducibility which you don't get with CasaOS or with Docker CLI commands.
+
+To install CasaOS, simply run the following command.
+
+```bash
+curl -fsSL https://get.casaos.io | sudo bash
+```
+
+That's it. It's as easy as that. After installation, you can visit http://&lt;server-ip-address&gt; and you'll be presented with the CasaOS UI.
+
+![CasaOS](../assets/img/casaos/casaos1.png)
 
 ### Incus
 Since I did not install Proxmox, what if I want an easy to use WebGUI for creating and maintaining VMs and LXCs? Introducing Incus. It is a community driven alternative to Canonical's LXD, an all-in-one solution for creating and maintaining Virtual Machines and LXCs. This gives us a nice WebUI similar to Proxmox without the extra features I might not use.
@@ -96,24 +125,5 @@ Also exit out of the root user with the following command.
 exit
 ```
 
-### Docker
-To setup all my services that will run on my home server, I'll be using [Docker](https://docs.docker.com/engine/). However, instead of installing it manually, I'll be making use of [CasaOS](https://casaos.zimaspace.com/). There are a number of benefits of maintaining Docker containers through CasaOS, such as:
-
-* One click installation of apps. No need to fiddle around with Portainer or Docker compose files.
-* Ability to format our SSD for storage and setup a Samba share with the click of a button.
-* A nice dashboard to access all our apps so no need to install a separate dashboard.
-
-However, in a production environment, you should definitely use Docker compose files as they provide reproducibility which you don't get with CasaOS or with Docker CLI commands.
-
-To install CasaOS, simply run the following command.
-
-```bash
-curl -fsSL https://get.casaos.io | sudo bash
-```
-
-That's it. It's as easy as that. After installation, you can visit http://&lt;server-ip-address&gt; and you'll be presented with the CasaOS UI.
-
-![CasaOS](../assets/img/casaos/casaos1.png)
-
-### Next steps
-Now that my server is up and running, I'll be finally installing the needed apps for my home server in the next post.
+> Libvirt (the library used by any KVM program, such as Incus) also installs dnsmasq which runs on port 53, making it hard to run your own DNS server such as adguard or pi-hole. So I recommend to run them on an LXC in KVM instead of Docker.
+{: .prompt-warning}
