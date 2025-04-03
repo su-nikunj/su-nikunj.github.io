@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Setting up a home server - Part 1
+title: Setting up a home server - Hardware and OS
 date: 2025-03-22 08:00 +0200
 categories: [Home Server, Getting Started]
 tags: [home server, setup]

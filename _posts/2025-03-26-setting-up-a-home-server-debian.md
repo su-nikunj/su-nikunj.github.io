@@ -1,15 +1,21 @@
 ---
 layout: post
-title: Setting up a home server - Part 2
+title: Setting up a home server using Debian
 date: 2025-03-26 08:00 +0200
 categories: [Home Server, Getting Started]
-tags: [home server, setup, debian, docker, casaos, virtual machines, containers, incus]
+tags: [home server, setup, debian, nas, docker, casaos, virtual machines, containers, incus]
 ---
 
-In this post, I'll be setting up my Debian server with Docker and even setting up ability to create and manage Virtual Machines and Linux Containers.
+In this post, I'll be setting up a Debian server with Docker and even setting up ability to create and manage Virtual Machines and Linux Containers. I'm using a Ryzen mini PC with 1 nvme SSD and 1 SATA SSD. I'll also show how to setup a network share for the SATA SSD.
 
-### Configuring the network
-I'll need to modify the `/etc/network/interfaces` file to the following.
+### Initial setup
+The first thing I install in every debian install is unattended-upgrades package that takes care of installing security updates without having to do so manually. Setting it up is as easy as running the following command.
+
+```bash
+sudo apt install -y unattended-upgrades
+```
+
+After a fresh install of Debian, I'll need to modify the `/etc/network/interfaces` file to the following.
 
 ```text
 # This file describes the network interfaces available on your system
@@ -43,6 +49,50 @@ nameserver 192.168.1.1
 This sets the DNS server to whatever I set on my router.
 
 Now reboot the machine.
+
+### NAS
+To setup a network share which I can access from other devices, I'll setup a Samba share using Cockpit and some plugins from 45drives.
+
+Install cockpit with the following commands as root. This enables backports repository and then installs cockpit from it.
+
+```bash
+. /etc/os-release
+echo "deb http://deb.debian.org/debian ${VERSION_CODENAME}-backports main" > \
+    /etc/apt/sources.list.d/backports.list
+apt update
+
+apt install -t ${VERSION_CODENAME}-backports cockpit
+```
+
+For the plugins, head on over to these links:
+
+* https://github.com/45Drives/cockpit-navigator
+* https://github.com/45Drives/cockpit-file-sharing
+* https://github.com/45Drives/cockpit-identities
+
+In each of them, go to releases page, and in the latest release, right click the .deb file and select copy link. Now in the debian terminal, download these files like this example.
+
+```bash
+wget https://github.com/45Drives/cockpit-identities/releases/download/v0.1.12/cockpit-identities_0.1.12-1focal_all.deb
+```
+
+Repeat for all 3 .deb files. Now install them using this command and then remove the .deb files after installing.
+
+```bash
+sudo apt install ./*.deb
+
+rm *.deb
+```
+
+Now on the browser, head over to `http://<ip-address>:9090` and you can login with your user account in the cockpit dashboard.
+
+![Cockpit](../assets/img/cockpit/cockpit1.png)
+
+Now go to Identities, select your user, and select "Set Samba Password" to choose a Samba password used for accessing it over the network.
+
+Now go to File Sharing, and in Share configuration, press the + button to create a new share. Give the path, and select the appropriate permissions.
+
+This should start an SMB server which can be accessed from almost every major Operating System on the same network.
 
 ### Docker
 To setup all my services that will run on my home server, I'll be using [Docker](https://docs.docker.com/engine/). However, instead of installing it manually, I'll be making use of [CasaOS](https://casaos.zimaspace.com/). There are a number of benefits of maintaining Docker containers through CasaOS, such as:
@@ -125,5 +175,5 @@ Also exit out of the root user with the following command.
 exit
 ```
 
-> Libvirt (the library used by any KVM program, such as Incus) also installs dnsmasq which runs on port 53, making it hard to run your own DNS server such as adguard or pi-hole. So I recommend to run them on an LXC in KVM instead of Docker.
+> Libvirt (the library used by any KVM program, such as Incus) also installs dnsmasq which runs on port 53, making it hard to run your own DNS server such as adguard or pi-hole. So I recommend to run these ad blockers on an LXC in KVM instead of Docker.
 {: .prompt-warning}
