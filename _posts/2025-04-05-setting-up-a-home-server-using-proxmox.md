@@ -86,7 +86,7 @@ Then created a new user with ID 1000 as this is how we'll be mounting the NFS sh
 
 ![TrueNas shares](../assets/img/truenas/truenas2.png)
 
-> By default the Backups share will give a permission denied in Proxmox and also in Docker volume mounts. To fix this, edit both the share, select Advanced options and change the Maproot User and Maproot Group to root.
+> By default the Backups share will give a permission denied in Proxmox and also in Docker volume mounts. To fix this, edit both of the shares, select Advanced options and change the Maproot User and Maproot Group to root.
 {: .prompt-danger}
 
 ![TrueNas maproot](../assets/img/truenas/truenas3.png)
