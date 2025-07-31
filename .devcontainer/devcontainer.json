@@ -4,6 +4,9 @@
   "onCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "runArgs": ["--userns=keep-id", "--security-opt", "label=disable"],
+  "mounts": [
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,readonly,type=bind"
+  ],
   "customizations": {
     "vscode": {
       "settings": {
