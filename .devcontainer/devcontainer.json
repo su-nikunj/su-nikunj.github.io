@@ -1,11 +1,12 @@
 {
   "name": "Jekyll",
   "image": "mcr.microsoft.com/devcontainers/jekyll:2-bullseye",
+  "appPort": "4000",
   "onCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "runArgs": ["--userns=keep-id", "--security-opt", "label=disable"],
   "mounts": [
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,readonly,type=bind"
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,readonly,type=bind"
   ],
   "customizations": {
     "vscode": {
